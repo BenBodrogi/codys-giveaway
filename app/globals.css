@@ -1,0 +1,232 @@
+/* ============================================================
+   Feeding Frenzy — global styles
+   Shark/ocean palette + Mail Ray Stuff display type. The recurring
+   visual signature (irregular teeth, built as inline SVG in
+   app/page.tsx -- see SharkMouth / ToothStrip) frames the counter and
+   winners banner. The hero stays a plain colored band deliberately.
+   ============================================================ */
+
+/* Aquaphonic / Mail Ray Stuff / Touch of Nature are LICENSED/download-
+   yourself fonts (see the @font-face comments below) — none of these
+   ship bundled. Until dropped in, Google Fonts fallbacks close to each
+   one's vibe render immediately with zero setup. */
+
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+/* ---- Display font options — download the OTF, drop it in
+   web/public/fonts/, uncomment the matching block. The --font-display
+   var below tries the real family first, falls back to a free Google
+   Font until then.
+
+   PRIMARY — Mail Ray Stuff: bouncy hand-drawn, public domain — fits the
+   playful VTuber/kawaii brand this site is actually for.
+   https://www.1001fonts.com/mail-ray-stuff-font.html
+@font-face {
+  font-family: "Mail Ray Stuff";
+  src: url("/fonts/MailRayStuff.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+*/
+
+/* ALTERNATE — Aquaphonic: genuinely water-themed display face, free for
+   personal AND commercial use, more "elegant aquatic" than "playful".
+   https://www.1001fonts.com/aquaphonic-font.html
+@font-face {
+  font-family: "Aquaphonic";
+  src: url("/fonts/Aquaphonic-Downpour.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+*/
+
+/* ALTERNATE — Touch of Nature: fish worked into the letterforms.
+   Freeware; double-check commercial terms before shipping with it.
+   https://www.fontspace.com/touch-of-nature-font-f9784
+@font-face {
+  font-family: "Touch of Nature";
+  src: url("/fonts/TouchOfNature.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+*/
+
+:root {
+  /* ---- Palette ---- */
+  --abyss:        #03080F;
+  --midnight:     #0B1D33;
+  --deep-water:   #0F3057;
+  --ocean-blue:   #146C94;
+  --lagoon:       #1F9EBF;
+  --shallow-surf: #4FC3D9;
+  --sea-glass:    #9FE7E8;
+  --sea-foam:     #E4F6F6;
+
+  /* ---- Roles ---- */
+  --bg:        var(--sea-foam);
+  --surface:   var(--sea-glass);
+  --accent:    var(--ocean-blue);
+  --accent-2:  var(--deep-water);
+  --ink:       var(--midnight);    /* dark navy for body text on light */
+  --on-color:  #ffffff;            /* white text on color, NO outline */
+  --maw:       #4A1418;            /* shark mouth interior -- deliberately
+                                       off-palette (deep maroon, not blue)
+                                       so it reads as looking INTO the
+                                       mouth. Distinct from error red
+                                       (#a33) in both hue and darkness. */
+  --sky-top:    var(--ocean-blue); /* hero gradient -- one step brighter
+                                       than --accent/--accent-2, kept as
+                                       its own pair so the widespread use
+                                       of --accent/--accent-2 elsewhere
+                                       (text, cards) doesn't shift too.
+                                       Bright above the waterline, the
+                                       water gets brighter still, then
+                                       the page darkens again with depth
+                                       as you scroll down through it. */
+  --sky-bottom: var(--lagoon);
+
+  /* "Mail Ray Stuff" first (once licensed font is dropped in),
+     Bubblegum Sans fallback — both bouncy/playful, matching the
+     VTuber-kawaii brand. Swap to "Aquaphonic"/"Fredoka" or
+     "Touch of Nature"/"Nunito" for a different vibe — see the
+     @font-face comments above. */
+  --font-display: "Mail Ray Stuff", "Bubblegum Sans", cursive;
+  --font-body:    "Nunito", system-ui, sans-serif;
+
+  --radius:    22px;
+  --radius-sm: 14px;
+  --shadow:    0 10px 28px -12px rgba(3, 8, 15, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  /* Defensive backstop: SwimmingFish/Bubbles break out of <main>'s
+     narrower centered column to span the true viewport edge-to-edge
+     using the left:50%/width:100vw/translateX(-50%) full-bleed trick --
+     100vw is defined by spec to include the scrollbar's own width, so
+     it can overshoot the actually-visible area by a few px on browsers
+     with a non-overlay scrollbar. This guarantees the page itself can
+     never scroll horizontally regardless of that (or any future
+     full-bleed element's) imprecision. */
+  overflow-x: hidden;
+  background: linear-gradient(180deg,
+    var(--sea-foam) 0%,
+    var(--sea-glass) 55%,
+    var(--shallow-surf) 100%);
+  background-repeat: no-repeat;
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Soft floating "bubble"/light-shaft blobs for depth (no flat color) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+body::before {
+  width: 460px; height: 460px;
+  background: var(--lagoon);
+  top: -160px; left: -140px;
+}
+body::after {
+  width: 520px; height: 520px;
+  background: var(--ocean-blue);
+  bottom: -200px; right: -160px;
+  opacity: 0.28;
+}
+
+/* Display type: white, no outline, chunky + friendly */
+.display {
+  font-family: var(--font-display);
+  color: var(--on-color);
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+  /* soft drop shadow ONLY — no text outline / stroke */
+  text-shadow: 0 3px 0 rgba(3, 8, 15, 0.25);
+}
+
+/* Hero band: a bold, bright colored zone behind the title -- "above
+   water", replacing the plain flat header the original site used.
+   Deliberately plain (no teeth) -- the mouth motif lives in the counter
+   and winners banner. */
+.hero {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-body); cursor: pointer; border: none; }
+
+@keyframes pop {
+  0%   { transform: scale(0.96); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+/* Each bubble travels from its spawn point up to the water's surface
+   (0,0 of <main>, right at the wave divider) and fades out near the top
+   rather than popping instantly, then loops. --dy (how far up) and --o
+   (peak opacity) are set per-bubble via inline custom properties since
+   each one starts at a different depth. The static opacity below is the
+   prefers-reduced-motion fallback (animation: none reverts to it, not
+   to the keyframe's 0%). */
+@keyframes rise-to-surface {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: var(--o, 0.5); }
+  85%  { opacity: var(--o, 0.5); }
+  100% { transform: translateY(var(--dy, -300px)); opacity: 0; }
+}
+/* The wave is a fixed-pixel CSS background tile (background-size in px,
+   not %), repeated with background-repeat -- NOT an SVG stretched to
+   fill an arbitrary container width, which is what caused the teeth
+   strip to distort on a wide screen earlier and is the same bug this
+   would hit if the wave scaled with viewport width. Sliding
+   background-position by exactly one tile-width loops seamlessly. */
+@keyframes wave-scroll {
+  from { background-position-x: 0; }
+  to   { background-position-x: -700px; }
+}
+/* Ambient background fish: slow crossing of the CONTENT column, plus a
+   separate, much faster bob+tilt layered on a nested wrapper -- see
+   SwimmingFish in page.tsx for why it's split into three nested
+   elements instead of one. Animates `left` as a percentage rather than
+   `transform: translateX(vw)` -- vw is relative to the viewport, but
+   the fish's containing block is <main>, which is capped at
+   maxWidth:720 and centered with empty margin on wider screens. A
+   vw-based distance measured the full monitor width while the fish
+   started offset inside that narrower, centered box, so on wide
+   screens fish traveled well past the site's own content column into
+   the empty margin (and spent a large chunk of each linear cycle
+   parked out there before wrapping, reading as an early disappearance).
+   `left: %` is relative to the containing block itself, so the travel
+   distance always matches whatever main actually renders at. */
+@keyframes swim-right {
+  from { left: -12%; }
+  to   { left: 112%; }
+}
+@keyframes swim-left {
+  from { left: 112%; }
+  to   { left: -12%; }
+}
+@keyframes fish-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-6px) rotate(-4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-scroll, .bubble-rise, .fish-swim, .fish-bob {
+    animation: none !important;
+  }
+}
