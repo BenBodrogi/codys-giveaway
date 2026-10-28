@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "🦈 Feeding Frenzy",
-  description: "Coin-weighted TikTok Live giveaway — feed the shark",
+  description: "TikTok Live giveaway — feed the shark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

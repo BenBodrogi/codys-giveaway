@@ -2,9 +2,11 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "./firebaseAdmin";
 
 // ============================================================
-//  Weighted draw — the Firestore equivalent of the Postgres function
+//  Equal-chance draw — the Firestore equivalent of the Postgres function
 //  `draw_next_place()`. Draws the LOWEST unfilled prize place (largest
-//  prize first), weighted by coins, excluding anyone who already won.
+//  prize first), picking uniformly at random among entrants who have
+//  gifted at least one coin and haven't already won. How many coins
+//  someone gifted does NOT change their odds -- it only gets them in.
 //  Atomic via a single Firestore transaction: all reads (prizes, winners,
 //  eligible entrants) happen first, then the winner doc is written and
 //  the giveaway is closed out if that was the last place.
@@ -47,25 +49,12 @@ export async function drawNextPlace(giveawayId: string): Promise<DrawResult> {
     const entrantsSnap = await tx.get(
       giveawayRef.collection("entrants").where("coins", ">", 0)
     );
-    const eligible = entrantsSnap.docs
-      .filter((d) => !wonEntrantIds.has(d.id))
-      .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-
-    const total = eligible.reduce((s, d) => s + (d.data().coins as number), 0);
-    if (total <= 0) {
+    const eligible = entrantsSnap.docs.filter((d) => !wonEntrantIds.has(d.id));
+    if (eligible.length === 0) {
       throw new Error(`No eligible entrants left to draw for giveaway ${giveawayId}`);
     }
 
-    const pick = Math.floor(Math.random() * total) + 1;
-    let cumulative = 0;
-    let winnerDoc = eligible[eligible.length - 1];
-    for (const e of eligible) {
-      cumulative += e.data().coins as number;
-      if (cumulative >= pick) {
-        winnerDoc = e;
-        break;
-      }
-    }
+    const winnerDoc = eligible[Math.floor(Math.random() * eligible.length)];
     const wd = winnerDoc.data();
 
     const winnerRef = giveawayRef.collection("winners").doc(String(place));

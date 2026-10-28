@@ -18,7 +18,6 @@ const T = {
     prizesHeading: "The bait",
     andMorePrizes: (n: number) => `(+${n} more catch${n > 1 ? "es" : ""})`,
     poolLabel: "🪙 Gold eaten by the shark",
-    chance: "bite chance",
     noCoins: "The water's empty, be the first fish in! 🫧",
     footer: "Live feed, updates as the shark eats the gold from TikTok 🦈",
     restOfSchool: "The rest of the school",
@@ -33,7 +32,6 @@ const T = {
     prizesHeading: "A csali",
     andMorePrizes: (n: number) => `(+${n} további zsákmány)`,
     poolLabel: "🪙 Aranyat evett a cápa",
-    chance: "harapási esély",
     noCoins: "Üres a víz, legyél te az első hal! 🫧",
     footer: "Élőben frissül, amint a cápa megeszi az aranyat TikTokon 🦈",
     restOfSchool: "A raj többi tagja",
@@ -745,7 +743,6 @@ export default function Home() {
                 {podium.map((e, col) => {
                   const rankIdx = [1, 0, 2][col];
                   if (!e) return <div key={rankIdx} style={{ flex: 1, maxWidth: 160 }} />;
-                  const pct = total ? (e.coins / total) * 100 : 0;
                   const podiumHeight = rankIdx === 0 ? 172 : rankIdx === 1 ? 128 : 102;
                   return (
                     <div key={e.id} style={{ flex: 1, maxWidth: 160, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -771,9 +768,6 @@ export default function Home() {
                         <div className="display" style={{ fontSize: rankIdx === 0 ? 22 : 17, marginTop: 4 }}>
                           {e.coins.toLocaleString()}
                         </div>
-                        <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>
-                          {pct.toFixed(1)}% {t.chance}
-                        </div>
                       </div>
                     </div>
                   );
@@ -789,7 +783,6 @@ export default function Home() {
             )}
             <section style={{ display: "grid", gap: 10 }}>
               {rest.map((e, i) => {
-                const pct = total ? (e.coins / total) * 100 : 0;
                 return (
                   <div
                     key={e.id}
@@ -805,15 +798,6 @@ export default function Home() {
                       overflow: "hidden",
                     }}
                   >
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        width: `${pct}%`,
-                        background: "var(--surface)",
-                        opacity: 0.28,
-                      }}
-                    />
                     <div className="display" style={{ width: 26, textAlign: "center", fontSize: 16, color: "var(--accent)", zIndex: 1 }}>
                       {i + 4}
                     </div>
@@ -831,9 +815,6 @@ export default function Home() {
                     <div style={{ textAlign: "right", zIndex: 1 }}>
                       <div style={{ fontWeight: 800, color: "var(--accent-2)" }}>
                         {e.coins.toLocaleString()} 🪙
-                      </div>
-                      <div style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>
-                        {pct.toFixed(1)}% {t.chance}
                       </div>
                     </div>
                   </div>

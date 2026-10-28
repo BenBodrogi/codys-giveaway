@@ -400,7 +400,7 @@ export default function Admin() {
                   opacity: wonIds.has(e.id) ? 0.6 : 1,
                 }}>
                   <span style={{ flex: 1, minWidth: 0 }}>@{e.tiktokUser} {wonIds.has(e.id) && "🏆"}</span>
-                  <span>{e.coins.toLocaleString()} 🪙 · {total ? ((e.coins / total) * 100).toFixed(1) : 0}%</span>
+                  <span>{e.coins.toLocaleString()} 🪙</span>
                   {!wonIds.has(e.id) && (
                     <button
                       onClick={() => removeEntrant(e.id, e.tiktokUser)}
